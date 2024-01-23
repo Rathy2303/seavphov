@@ -21,6 +21,7 @@ $admin = getAdminInfo($db, $_SESSION['email']);
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <link rel="stylesheet" href="css/index.css">
+
 <body>
   <!-- Nav-Bar -->
   <div class="container-fluid p-0">
@@ -51,16 +52,41 @@ $admin = getAdminInfo($db, $_SESSION['email']);
   </div>
   <!-- End Nav-Bar -->
 
-  <!-- Sidebar -->
-  <div id="side" class="w3-sidebar w3-light-grey w3-bar-block" style="width:25%">
-    <h3 class="w3-bar-item"><?= $admin['email'] ?></h3>
-    <a href="index.php" class="w3-bar-item w3-button active">Add Post</a>
-    <a href="menu.php" class="w3-bar-item w3-button">Add Menu</a>
-    <a href="editpost.php" class="w3-bar-item w3-button">Edit Post</a>
-    <a href="../include/logout.php" class="w3-bar-item w3-button">Sign Out</a>
+  <!-- Content -->
+  <div class="container mt-5">
+    <!-- Table -->
+    <section class="table-container">
+      <table class="table table-bordered w-50 text-nowrap">
+        <thead>
+          <tr>
+            <th scope="col">TITLE</th>
+            <th scope="col">TYPE</th>
+            <th scope="col">ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Node.js Novice to Ninja by Craig Buckler (2022)</th>
+            <td>Other</td>
+            <td>
+              <button type="button" class="btn btn-danger">Delete</button>
+              <button type="button" class="btn btn-primary">Edit</button>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">The Power Of Now</th>
+            <td>Other</td>
+            <td>Button</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <!-- End Table -->
   </div>
+  <!-- End Content -->
 
-  <!-- Page Content -->
+
+  <!-- Page Content
   <div style="margin-left:25%">
 
     <div class="w3-container w3-teal">
@@ -104,11 +130,13 @@ $admin = getAdminInfo($db, $_SESSION['email']);
         </form>
       </div>
     </div>
-  </div>
+  </div> -->
+
   <!-- Link Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   <!-- End Link Bootstrap JS -->
 </body>
+
 </html>
