@@ -74,7 +74,7 @@ $admin = getAdminInfo($db, $_SESSION['email']);
               <td><?= $row['name'] ?></td>
               <td class="d-flex">
                 <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-danger mr-1">Delete</button>
-                <button type="button" data-id="<?= $row['id'] ?>" data-title="<?= $row['title']?>"  data-url="<?=$row['book_url']?>" data-type-id="<?=$row['category_id'];?>" data-type="<?= $row['name']?>" class="btn btn-primary js-btn-edit" data-toggle="modal" data-target="#editModal">Edit</button>
+                <button type="button" data-id="<?= $row['id'] ?>" data-title="<?= $row['title'] ?>" data-url="<?= $row['book_url'] ?>" data-type-id="<?= $row['category_id']; ?>" data-type="<?= $row['name'] ?>" class="btn btn-primary js-btn-edit" data-toggle="modal" data-target="#editModal">Edit</button>
               </td>
             </tr>
           <?php
@@ -89,41 +89,43 @@ $admin = getAdminInfo($db, $_SESSION['email']);
     <div class="modal" tabindex="-1" id="editModal" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Edit Book</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
+          <form action="./php/update_book.php" enctype="multipart/form-data" method="post">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit Book</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <input type="hidden" value="" id="book_id" name="book_id">
               <!-- Book Title -->
               <div class="form-group">
                 <label for="exampleInputTitle">Book Title</label>
-                <input type="text" class="form-control" id="book_title" aria-describedby="emailHelp" placeholder="Enter Book Title">
+                <input type="text" class="form-control" id="book_title" name="book_title" aria-describedby="emailHelp" placeholder="Enter Book Title">
               </div>
               <!-- End Book Title -->
 
               <!-- Book Url -->
               <div class="form-group">
                 <label for="exampleInputTitle">Book Url</label>
-                <input type="text" class="form-control" id="book_url" aria-describedby="emailHelp" placeholder="Enter Book Url">
+                <input type="text" class="form-control" id="book_url" name="book_url" aria-describedby="emailHelp" placeholder="Enter Book Url">
               </div>
               <!-- End Book Url -->
 
               <!-- Book Url -->
               <div class="form-group">
                 <label for="exampleFormControlSelect1">Book Type</label>
-                <select class="form-control" id="book_url">
-                  <option id="book_type" value=""><?=$cate['name']?></option>
+                <select class="form-control" id="book_type_selected" name="book_type_selected">
+                  <option id="book_type" value=""><?= $cate['name'] ?></option>
                   <!-- Fetch Category -->
                   <?php
-                    $category = mysqli_query($db,"SELECT * FROM category");
-                    while($cate=mysqli_fetch_assoc($category)){
-                      ?>
-                        <option value="<?=$cate['id']?>"><?=$cate['name']?></option>
-                      <?php
-                    }
+                  $category = mysqli_query($db, "SELECT * FROM category");
+                  while ($cate = mysqli_fetch_assoc($category)) {
+                  ?>
+                    <option value="<?= $cate['id'] ?>"><?= $cate['name'] ?></option>
+                  <?php
+                  }
                   ?>
                   <!-- End Fetch Category -->
                 </select>
@@ -131,14 +133,14 @@ $admin = getAdminInfo($db, $_SESSION['email']);
               <!-- End Book Url -->
               <div class="form-group">
                 <label for="exampleFormControlFile1">Image File</label>
-                <input type="file" name="image" class="form-control-file" id="exampleFormControlFile1">
+                <input type="file" name="image" id="image" class="form-control-file" id="exampleFormControlFile1">
               </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Save changes</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
+            </div>
+            <div class="modal-footer">
+              <input type="submit" name="save" id="save" class="btn btn-primary" value="Save changes">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

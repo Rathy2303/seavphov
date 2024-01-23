@@ -12,6 +12,6 @@ $(document).ready(function(){
         $('#book_url').val(book_url);
         $('#book_type').html(book_type);
         $('#book_type').val(book_type_id);
-
+        $('#book_id').val(book_id);
     });
 })
