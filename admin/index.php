@@ -66,7 +66,7 @@ $admin = getAdminInfo($db, $_SESSION['email']);
         </thead>
         <tbody>
           <?php
-          $fetchdata = mysqli_query($db, "SELECT book.title,book.id,category.name FROM book INNER JOIN category on book.category_id=category.id");
+          $fetchdata = mysqli_query($db, "SELECT book.title,book.book_url,book.id,book.category_id,category.name FROM book INNER JOIN category on book.category_id=category.id");
           while ($row = mysqli_fetch_assoc($fetchdata)) {
           ?>
             <tr>
@@ -74,7 +74,7 @@ $admin = getAdminInfo($db, $_SESSION['email']);
               <td><?= $row['name'] ?></td>
               <td class="d-flex">
                 <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-danger mr-1">Delete</button>
-                <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-primary" data-toggle="modal" data-target="#editModal">Edit</button>
+                <button type="button" data-id="<?= $row['id'] ?>" data-title="<?= $row['title']?>"  data-url="<?=$row['book_url']?>" data-type-id="<?=$row['category_id'];?>" data-type="<?= $row['name']?>" class="btn btn-primary js-btn-edit" data-toggle="modal" data-target="#editModal">Edit</button>
               </td>
             </tr>
           <?php
@@ -90,13 +90,50 @@ $admin = getAdminInfo($db, $_SESSION['email']);
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
+            <h5 class="modal-title">Edit Book</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <p>Modal body text goes here.</p>
+            <form>
+              <!-- Book Title -->
+              <div class="form-group">
+                <label for="exampleInputTitle">Book Title</label>
+                <input type="text" class="form-control" id="book_title" aria-describedby="emailHelp" placeholder="Enter Book Title">
+              </div>
+              <!-- End Book Title -->
+
+              <!-- Book Url -->
+              <div class="form-group">
+                <label for="exampleInputTitle">Book Url</label>
+                <input type="text" class="form-control" id="book_url" aria-describedby="emailHelp" placeholder="Enter Book Url">
+              </div>
+              <!-- End Book Url -->
+
+              <!-- Book Url -->
+              <div class="form-group">
+                <label for="exampleFormControlSelect1">Book Type</label>
+                <select class="form-control" id="book_url">
+                  <option id="book_type" value=""><?=$cate['name']?></option>
+                  <!-- Fetch Category -->
+                  <?php
+                    $category = mysqli_query($db,"SELECT * FROM category");
+                    while($cate=mysqli_fetch_assoc($category)){
+                      ?>
+                        <option value="<?=$cate['id']?>"><?=$cate['name']?></option>
+                      <?php
+                    }
+                  ?>
+                  <!-- End Fetch Category -->
+                </select>
+              </div>
+              <!-- End Book Url -->
+              <div class="form-group">
+                <label for="exampleFormControlFile1">Image File</label>
+                <input type="file" name="image" class="form-control-file" id="exampleFormControlFile1">
+              </div>
+            </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary">Save changes</button>
@@ -161,6 +198,8 @@ $admin = getAdminInfo($db, $_SESSION['email']);
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   <!-- End Link Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="./script/index.js"></script>
 </body>
 
 </html>
