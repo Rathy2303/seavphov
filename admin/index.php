@@ -66,26 +66,46 @@ $admin = getAdminInfo($db, $_SESSION['email']);
         </thead>
         <tbody>
           <?php
-            $fetchdata = mysqli_query($db, "SELECT book.title,book.id,category.name FROM book INNER JOIN category on book.category_id=category.id");
-            while ($row = mysqli_fetch_assoc($fetchdata)) {
+          $fetchdata = mysqli_query($db, "SELECT book.title,book.id,category.name FROM book INNER JOIN category on book.category_id=category.id");
+          while ($row = mysqli_fetch_assoc($fetchdata)) {
           ?>
             <tr>
-              <th scope="row"><?=$row['title'];?></th>
-              <td><?=$row['name']?></td>
+              <th scope="row"><?= $row['title']; ?></th>
+              <td><?= $row['name'] ?></td>
               <td class="d-flex">
-                <button type="button" class="btn btn-danger mr-1">Delete</button>
-                <button type="button" class="btn btn-primary">Edit</button>
+                <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-danger mr-1">Delete</button>
+                <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-primary" data-toggle="modal" data-target="#editModal">Edit</button>
               </td>
             </tr>
           <?php
           }
-
-
           ?>
         </tbody>
       </table>
     </section>
     <!-- End Table -->
+
+    <!-- Edit Popup -->
+    <div class="modal" tabindex="-1" id="editModal" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Edit Popup -->
   </div>
   <!-- End Content -->
 
