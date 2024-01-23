@@ -56,7 +56,7 @@ $admin = getAdminInfo($db, $_SESSION['email']);
   <div class="container mt-5">
     <!-- Table -->
     <section class="table-container">
-      <table class="table table-bordered w-50 text-nowrap">
+      <table class="table table-bordered w-50">
         <thead>
           <tr>
             <th scope="col">TITLE</th>
@@ -65,19 +65,23 @@ $admin = getAdminInfo($db, $_SESSION['email']);
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">Node.js Novice to Ninja by Craig Buckler (2022)</th>
-            <td>Other</td>
-            <td>
-              <button type="button" class="btn btn-danger">Delete</button>
-              <button type="button" class="btn btn-primary">Edit</button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">The Power Of Now</th>
-            <td>Other</td>
-            <td>Button</td>
-          </tr>
+          <?php
+            $fetchdata = mysqli_query($db, "SELECT book.title,book.id,category.name FROM book INNER JOIN category on book.category_id=category.id");
+            while ($row = mysqli_fetch_assoc($fetchdata)) {
+          ?>
+            <tr>
+              <th scope="row"><?=$row['title'];?></th>
+              <td><?=$row['name']?></td>
+              <td class="d-flex">
+                <button type="button" class="btn btn-danger mr-1">Delete</button>
+                <button type="button" class="btn btn-primary">Edit</button>
+              </td>
+            </tr>
+          <?php
+          }
+
+
+          ?>
         </tbody>
       </table>
     </section>
