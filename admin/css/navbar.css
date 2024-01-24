@@ -1,0 +1,17 @@
+#notification_box{
+    position: relative;
+}
+#notification-count{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 3px;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: red;
+    font-size: 10px;
+    color: white;
+}
