@@ -44,6 +44,17 @@ $admin = getAdminInfo($db, $_SESSION['email']);
           </li>
         </ul>
         <ul class="navbar-nav">
+          <li class="nav-item">
+            <form class="form-inline">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-success my-2 my-sm-0 mr-5" type="submit">Search</button>
+            </form>
+          </li>
+          <li class="nav-item">
+            <span class="nav-link">
+              <i class="fa-solid fa-plus" style="cursor: pointer;" data-toggle="modal" data-target="#addModal"></i>
+            <span>
+          </li>
           <li class="nav-item" id="notification_box">
             <a class="nav-link" href="../include/logout.php">
               <i class="fa-solid fa-bell"></i>
@@ -81,7 +92,7 @@ $admin = getAdminInfo($db, $_SESSION['email']);
               <th scope="row"><?= $row['title']; ?></th>
               <td><?= $row['name'] ?></td>
               <td class="d-flex">
-                <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-danger mr-1 js-btn-delete" data-id="<?=$row['id'];?>" data-image="<?=$row['image'];?>" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-danger mr-1 js-btn-delete" data-id="<?= $row['id']; ?>" data-image="<?= $row['image']; ?>" data-toggle="modal" data-target="#deleteModal">Delete</button>
                 <button type="button" data-id="<?= $row['id'] ?>" data-title="<?= $row['title'] ?>" data-url="<?= $row['book_url'] ?>" data-type-id="<?= $row['category_id']; ?>" data-type="<?= $row['name'] ?>" class="btn btn-primary js-btn-edit" data-toggle="modal" data-target="#editModal">Edit</button>
               </td>
             </tr>
@@ -154,24 +165,83 @@ $admin = getAdminInfo($db, $_SESSION['email']);
     </div>
     <!-- End Edit Popup -->
 
-    <!-- Delete Popup -->
-    <div class="modal" tabindex="-1" id="deleteModal" role="dialog">
+    <!-- Add Popup -->
+    <div class="modal" tabindex="-1" id="addModal" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
+          <form action="./php/add_book.php" enctype="multipart/form-data" method="post">
             <div class="modal-header">
-              <h5 class="modal-title">Delete Book</h5>
+              <h5 class="modal-title">Add Book</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
               <input type="hidden" value="" id="book_id" name="book_id">
-              <h3>Are You Sure to Delete?</h3>
+              <!-- Book Title -->
+              <div class="form-group">
+                <label for="exampleInputTitle">Book Title</label>
+                <input type="text" class="form-control" id="book_title" name="book_title" aria-describedby="emailHelp" placeholder="Enter Book Title" require>
+              </div>
+              <!-- End Book Title -->
+
+              <!-- Book Url -->
+              <div class="form-group">
+                <label for="exampleInputTitle">Book Url</label>
+                <input type="text" class="form-control" id="book_url" name="book_url" aria-describedby="emailHelp" placeholder="Enter Book Url" require>
+              </div>
+              <!-- End Book Url -->
+
+              <!-- Book Url -->
+              <div class="form-group">
+                <label for="exampleFormControlSelect1">Book Type</label>
+                <select class="form-control" id="book_type_selected" name="book_type_selected">
+                  <!-- Fetch Category -->
+                  <?php
+                  $category = mysqli_query($db, "SELECT * FROM category");
+                  while ($cate = mysqli_fetch_assoc($category)) {
+                  ?>
+                    <option value="<?= $cate['id'] ?>"><?= $cate['name'] ?></option>
+                  <?php
+                  }
+                  ?>
+                  <!-- End Fetch Category -->
+                </select>
+              </div>
+              <!-- End Book Url -->
+              <div class="form-group">
+                <label for="exampleFormControlFile1">Image File</label>
+                <input type="file" name="image" id="image" class="form-control-file" id="exampleFormControlFile1">
+              </div>
             </div>
             <div class="modal-footer">
-              <button id="btn-delete" class="btn btn-danger">Delete</button>
+              <input type="submit" name="add" id="add" class="btn btn-primary" value="Add">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- End Add Popup -->
+
+    <!-- Delete Popup -->
+    <div class="modal" tabindex="-1" id="deleteModal" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Delete Book</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" value="" id="book_id" name="book_id">
+            <h3>Are You Sure to Delete?</h3>
+          </div>
+          <div class="modal-footer">
+            <button id="btn-delete" class="btn btn-danger">Delete</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
         </div>
       </div>
     </div>
