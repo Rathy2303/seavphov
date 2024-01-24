@@ -43,7 +43,14 @@ $admin = getAdminInfo($db, $_SESSION['email']);
           </li>
         </ul>
         <ul class="navbar-nav">
-          <li class="nav-item">
+          <li class="nav-item" id="notification_box">
+            <a class="nav-link" href="../include/logout.php">
+                <i class="fa-solid fa-bell"></i>
+                <span id="notification-count">1</span>
+            </a>
+            
+          </li>
+          <li class="nav-item" >
             <a class="nav-link" href="../include/logout.php"><i class="fa-solid fa-right-from-bracket"></i></a>
           </li>
         </ul>
