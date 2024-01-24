@@ -10,6 +10,7 @@ if (!isset($_SESSION['isUserLoggedIn'])) {
     header("Location:../include/logout.php");
   }
 }
+$username = $_SESSION['username'];
 $admin = getAdminInfo($db, $_SESSION['email']);
 ?>
 <!DOCTYPE html>
@@ -27,7 +28,7 @@ $admin = getAdminInfo($db, $_SESSION['email']);
   <!-- Nav-Bar -->
   <div class="container-fluid p-0">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
-      <a class="navbar-brand" href="#">Welcome Rathy</a>
+      <a class="navbar-brand" href="#">Welcome <?=$username?></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
