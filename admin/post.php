@@ -46,12 +46,12 @@ $admin = getAdminInfo($db, $_SESSION['email']);
         <ul class="navbar-nav">
           <li class="nav-item" id="notification_box">
             <a class="nav-link" href="../include/logout.php">
-                <i class="fa-solid fa-bell"></i>
-                <span id="notification-count">1</span>
+              <i class="fa-solid fa-bell"></i>
+              <span id="notification-count">1</span>
             </a>
-            
+
           </li>
-          <li class="nav-item" >
+          <li class="nav-item">
             <a class="nav-link" href="../include/logout.php"><i class="fa-solid fa-right-from-bracket"></i></a>
           </li>
         </ul>
@@ -74,14 +74,14 @@ $admin = getAdminInfo($db, $_SESSION['email']);
         </thead>
         <tbody>
           <?php
-          $fetchdata = mysqli_query($db, "SELECT book.title,book.book_url,book.id,book.category_id,category.name FROM book INNER JOIN category on book.category_id=category.id");
+          $fetchdata = mysqli_query($db, "SELECT book.title,book.book_url,book.image,book.id,book.category_id,category.name FROM book INNER JOIN category on book.category_id=category.id");
           while ($row = mysqli_fetch_assoc($fetchdata)) {
           ?>
             <tr>
               <th scope="row"><?= $row['title']; ?></th>
               <td><?= $row['name'] ?></td>
               <td class="d-flex">
-                <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-danger mr-1">Delete</button>
+                <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-danger mr-1 js-btn-delete" data-id="<?=$row['id'];?>" data-image="<?=$row['image'];?>" data-toggle="modal" data-target="#deleteModal">Delete</button>
                 <button type="button" data-id="<?= $row['id'] ?>" data-title="<?= $row['title'] ?>" data-url="<?= $row['book_url'] ?>" data-type-id="<?= $row['category_id']; ?>" data-type="<?= $row['name'] ?>" class="btn btn-primary js-btn-edit" data-toggle="modal" data-target="#editModal">Edit</button>
               </td>
             </tr>
@@ -153,6 +153,30 @@ $admin = getAdminInfo($db, $_SESSION['email']);
       </div>
     </div>
     <!-- End Edit Popup -->
+
+    <!-- Delete Popup -->
+    <div class="modal" tabindex="-1" id="deleteModal" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete Book</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" value="" id="book_id" name="book_id">
+              <h3>Are You Sure to Delete?</h3>
+            </div>
+            <div class="modal-footer">
+              <button id="btn-delete" class="btn btn-danger">Delete</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Delete Popup -->
+
   </div>
   <!-- End Content -->
 
@@ -186,7 +210,6 @@ $admin = getAdminInfo($db, $_SESSION['email']);
               <?php
               }
               ?>
-
             </select>
 
           </div>
@@ -202,7 +225,6 @@ $admin = getAdminInfo($db, $_SESSION['email']);
       </div>
     </div>
   </div> -->
-
   <!-- Link Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
