@@ -39,9 +39,6 @@ $admin = getAdminInfo($db, $_SESSION['email']);
           <li class="nav-item  active">
             <a class="nav-link" href="#">Post</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Pricing</a>
-          </li>
         </ul>
         <ul class="navbar-nav">
           <li class="nav-item">
@@ -85,7 +82,7 @@ $admin = getAdminInfo($db, $_SESSION['email']);
         </thead>
         <tbody>
           <?php
-          $fetchdata = mysqli_query($db, "SELECT book.title,book.book_url,book.image,book.id,book.category_id,category.name FROM book INNER JOIN category on book.category_id=category.id");
+          $fetchdata = mysqli_query($db, "SELECT book.title,book.book_url,book.image,book.id,book.category_id,category.name FROM book INNER JOIN category on book.category_id=category.id ORDER BY id DESC");
           while ($row = mysqli_fetch_assoc($fetchdata)) {
           ?>
             <tr>

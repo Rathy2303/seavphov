@@ -7,27 +7,21 @@
     header('Location:index.php');
 
   }
-
-
-
   if(isset($_POST['login'])){
     
-
     $email=mysqli_real_escape_string($db,$_POST['email']);
 
     $pass=mysqli_real_escape_string($db,$_POST['password']);
 
-
-
     $query="SELECT * FROM admin where email='$email' AND password='$pass'";
-
     $runquery=mysqli_query($db,$query);
-
+    $result = mysqli_fetch_assoc($runquery);
     if(mysqli_num_rows($runquery)){
 
       $_SESSION['isUserLoggedIn']=true;
       $_SESSION['LAST_LOGIN_TIME']= time();
       $_SESSION['email']=$email;
+      $_SESSION['username']=$result['name'];
 
       header('Location:index.php');
 

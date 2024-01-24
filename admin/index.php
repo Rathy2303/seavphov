@@ -10,6 +10,7 @@ if (!isset($_SESSION['isUserLoggedIn'])) {
     header("Location:../include/logout.php");
   }
 }
+$username = $_SESSION['username'];
 $admin = getAdminInfo($db, $_SESSION['email']);
 ?>
 <!DOCTYPE html>
@@ -17,17 +18,19 @@ $admin = getAdminInfo($db, $_SESSION['email']);
 <title>Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" href="../kh.png" />
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <link rel="stylesheet" href="css/post.css">
 <link rel="stylesheet" href="css/navbar.css">
+<link rel="stylesheet" href="css/adminlte.min.css">
 
 <body>
   <!-- Nav-Bar -->
   <div class="container-fluid p-0">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
-      <a class="navbar-brand" href="#">Welcome Rathy</a>
+      <a class="navbar-brand" href="#">Welcome <?=$username?></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -38,9 +41,6 @@ $admin = getAdminInfo($db, $_SESSION['email']);
           </li>
           <li class="nav-item">
             <a class="nav-link" href="post.php">Post</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Pricing</a>
           </li>
         </ul>
         <ul class="navbar-nav">
@@ -62,146 +62,92 @@ $admin = getAdminInfo($db, $_SESSION['email']);
 
   <!-- Content -->
   <div class="container mt-5">
-    <!-- Table -->
-    <section class="table-container">
-      <table class="table table-bordered w-50">
-        <thead>
-          <tr>
-            <th scope="col">TITLE</th>
-            <th scope="col">TYPE</th>
-            <th scope="col">ACTION</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $fetchdata = mysqli_query($db, "SELECT book.title,book.book_url,book.id,book.category_id,category.name FROM book INNER JOIN category on book.category_id=category.id");
-          while ($row = mysqli_fetch_assoc($fetchdata)) {
-          ?>
-            <tr>
-              <th scope="row"><?= $row['title']; ?></th>
-              <td><?= $row['name'] ?></td>
-              <td class="d-flex">
-                <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-danger mr-1">Delete</button>
-                <button type="button" data-id="<?= $row['id'] ?>" data-title="<?= $row['title'] ?>" data-url="<?= $row['book_url'] ?>" data-type-id="<?= $row['category_id']; ?>" data-type="<?= $row['name'] ?>" class="btn btn-primary js-btn-edit" data-toggle="modal" data-target="#editModal">Edit</button>
-              </td>
-            </tr>
-          <?php
-          }
-          ?>
-        </tbody>
-      </table>
-    </section>
-    <!-- End Table -->
+  <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0">Dashboard</h1>
+              </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+          </div>
+          <!-- /.content-header -->
 
-    <!-- Edit Popup -->
-    <div class="modal" tabindex="-1" id="editModal" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <form action="./php/update_book.php" enctype="multipart/form-data" method="post">
-            <div class="modal-header">
-              <h5 class="modal-title">Edit Book</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
+          <!-- Main content -->
+          <section class="content">
+            <div class="container-fluid">
+              <!-- Small boxes (Stat box) -->
+              <div class="row">
+                <div class="col-lg-3 col-6">
+                  <!-- small box -->
+                  <div class="small-box bg-info">
+                    <div class="inner">
+                      <h3>150</h3>
 
-              <input type="hidden" value="" id="book_id" name="book_id">
-              <!-- Book Title -->
-              <div class="form-group">
-                <label for="exampleInputTitle">Book Title</label>
-                <input type="text" class="form-control" id="book_title" name="book_title" aria-describedby="emailHelp" placeholder="Enter Book Title">
-              </div>
-              <!-- End Book Title -->
+                      <p>New Orders</p>
+                    </div>
+                    <div class="icon">
+                      <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                  </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                  <!-- small box -->
+                  <div class="small-box bg-success">
+                    <div class="inner">
+                      <h3>53<sup style="font-size: 20px">%</sup></h3>
 
-              <!-- Book Url -->
-              <div class="form-group">
-                <label for="exampleInputTitle">Book Url</label>
-                <input type="text" class="form-control" id="book_url" name="book_url" aria-describedby="emailHelp" placeholder="Enter Book Url">
-              </div>
-              <!-- End Book Url -->
+                      <p>Bounce Rate</p>
+                    </div>
+                    <div class="icon">
+                      <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                  </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                  <!-- small box -->
+                  <div class="small-box bg-warning">
+                    <div class="inner">
+                      <h3>44</h3>
 
-              <!-- Book Url -->
-              <div class="form-group">
-                <label for="exampleFormControlSelect1">Book Type</label>
-                <select class="form-control" id="book_type_selected" name="book_type_selected">
-                  <option id="book_type" value=""><?= $cate['name'] ?></option>
-                  <!-- Fetch Category -->
-                  <?php
-                  $category = mysqli_query($db, "SELECT * FROM category");
-                  while ($cate = mysqli_fetch_assoc($category)) {
-                  ?>
-                    <option value="<?= $cate['id'] ?>"><?= $cate['name'] ?></option>
-                  <?php
-                  }
-                  ?>
-                  <!-- End Fetch Category -->
-                </select>
+                      <p>User Registrations</p>
+                    </div>
+                    <div class="icon">
+                      <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                  </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                  <!-- small box -->
+                  <div class="small-box bg-danger">
+                    <div class="inner">
+                      <h3>65</h3>
+
+                      <p>Unique Visitors</p>
+                    </div>
+                    <div class="icon">
+                      <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                  </div>
+                </div>
+                <!-- ./col -->
               </div>
-              <!-- End Book Url -->
-              <div class="form-group">
-                <label for="exampleFormControlFile1">Image File</label>
-                <input type="file" name="image" id="image" class="form-control-file" id="exampleFormControlFile1">
-              </div>
-            </div>
-            <div class="modal-footer">
-              <input type="submit" name="save" id="save" class="btn btn-primary" value="Save changes">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-          </form>
+              <!-- /.row -->
+              <!-- Main row -->
+              <!-- /.row (main row) -->
+            </div><!-- /.container-fluid -->
+          </section>
+          <!-- /.content -->
         </div>
-      </div>
-    </div>
-    <!-- End Edit Popup -->
+  
+
   </div>
-  <!-- End Content -->
-
-
-  <!-- Page Content
-  <div style="margin-left:25%">
-
-    <div class="w3-container w3-teal">
-      <h1>Admin Panel</h1>
-    </div>
-    <div class="w3-container">
-      <div class="wrapper-content">
-        <form action="../include/addpost.php" method="post" enctype="multipart/form-data">
-          <h1>Add Post</h1>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Title</label>
-            <input type="text" name="title" class="form-control" id="title" placeholder="Title">
-          </div>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Book Url</label>
-            <input type="text" name="bookurl" class="form-control" id="bookurl" placeholder="Book Url">
-          </div>
-          <div class="mb-3">
-            <label for="option" class="form-label">Choose Book Type</label>
-            <select name="booktype" class="form-select">
-              <?php
-              $categories = getAllCategory($db);
-              foreach ($categories as $ct) {
-              ?> <option value="<?= $ct['id'] ?>"><?= $ct['name'] ?></option>
-
-              <?php
-              }
-              ?>
-
-            </select>
-
-          </div>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Image</label>
-            <input type="file" name="imagefile" value="" class="form-control" id="image">
-          </div>
-
-          <div class="text-center">
-            <button type="submit" name="addpost" id="addpost" class="btn btn-primary ">Add Post</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div> -->
 
   <!-- Link Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
