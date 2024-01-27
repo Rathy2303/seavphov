@@ -10,6 +10,7 @@ $result_page = ($page - 1) * $post_per_page;
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<!-- Google tag (gtag.js) -->
@@ -37,50 +38,58 @@ $result_page = ($page - 1) * $post_per_page;
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
 	<!-- -----------------------------------jquery menu-------------------------------------- -->
 	<script src="js/jquery-1.8.0.min.js" type="text/javascript"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 	<title>Ebook</title>
 </head>
 
 <body>
 	<div class="page-loader">
 		<div class="loading-page-animetion">
-
 		</div>
 	</div>
 	<div class="all-content" style="display: none;">
-		<div id="main_content">
-			<div id="main_content1">
+		<div class="container">
 				<div class="wrap">
-
 					<?php
 					include 'include/header.php';
 					?>
-					<div class="menu">
-						<div id='cssmenu'>
-							<ul>
-								<li><a href=''class="active"><span>Home</span></a></li>
-								<?php
-								$menu = "SELECT * FROM menu";
-								$runPQ = mysqli_query($db, $menu);
-								while ($post = mysqli_fetch_assoc($runPQ)) {
-								?>
-									<li><a title="<?= $post['title'] ?>" href='./type.php?category=<?= $post['url'] ?>'><span><?= $post['name'] ?></span></a></li>
-								<?php
-								}
-								?>
-
-							</ul>
-						</div>
-
-					</div>
+						<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+							<div class="container-fluid">
+								<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+									<span class="navbar-toggler-icon"></span>
+								</button>
+								<div class="collapse navbar-collapse" id="navbarSupportedContent">
+									<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+										<li class="nav-item">
+											<a class="nav-link active" aria-current="page" href="#">Home</a>
+										</li>
+										<?php
+										$menu = "SELECT * FROM menu";
+										$runPQ = mysqli_query($db, $menu);
+										while ($post = mysqli_fetch_assoc($runPQ)) {
+										?>
+											<li class="nav-item">
+												<a title="<?= $post['title'] ?>" class="nav-link" href='./type.php?category=<?= $post['url'] ?>'><?= $post['name'] ?></a>
+											</li>
+										<?php
+										}
+										?>
+									</ul>
+									<form class="d-flex" role="search">
+										<input class="form-control me-2" type="text" class="search" id="searchid" name="search" placeholder="Search here..." aria-label="Search">
+										<button class="btn btn-light" type="submit">Search</button>
+									</form>
+								</div>
+							</div>
+						</nav>
 
 				</div>
 				<!-- -------------------------content-------------------------------------------------- -->
-				<div class="wrap">
+				<div class="row" style="margin-top: 20px;">
 					<!-- ---------------------------left-------------------------------------------------- -->
-					<div class="left">
-
+					<div class="col-xxl-8 col-xl-8 col-md-12 col-sm-12 col-12">
 						<!-- -------------------------------end new content--------------------------------------- -->
-						<div class="New_content_1" style="margin-bottom: 25px">
+						<div class="row" style="margin-bottom: 25px">
 							<?php
 							if (isset($_GET['search'])) {
 								$keyword = $_GET['search'];
@@ -97,8 +106,7 @@ $result_page = ($page - 1) * $post_per_page;
 
 							while ($post = mysqli_fetch_assoc($runPQ)) {
 							?>
-								<div class="movie_1 center">
-
+								<div class="col-xxl-3 col-xl-3 col-md-3 col-sm-6 col-6">
 									<div class="movie_image">
 										<img alt="<?= $post['title'] ?>" data-id="<?= $post['id'] ?>" class="img js-img-<?= $post['id'] ?>" src="images/book/<?= $post['image'] ?>" />
 										<div class="view-detial">
@@ -124,63 +132,19 @@ $result_page = ($page - 1) * $post_per_page;
 							?>
 						</div>
 						<!-- -------------------------------end new content--------------------------------------- -->
-						<?php
-						include 'include/pagination.php';
-						?>
+
 
 					</div>
-
-				</div>
-				<!-- -----------------------------end left-------------------------------------------- -->
-				<div class="right">
-					<style type="text/css">
-						.content {
-							width: 900px;
-							margin: 0 auto;
-						}
-
-						#searchid {
-							font-size: 14px;
-							padding-left: 10px;
-						}
-
-						#result {
-							background-color: white;
-							border: 1px solid #ccc;
-							border-radius: 5px;
-							display: none;
-							margin-top: 18px;
-							overflow: hidden;
-							padding: 10px;
-							position: absolute;
-							width: 277px;
-						}
-
-						.show {
-							padding: 10px;
-							border-bottom: 1px #999 dashed;
-							font-size: 15px;
-							height: 50px;
-						}
-
-						.show:hover {
-							background: #4c66a4;
-							color: #FFF;
-							cursor: pointer;
-						}
-					</style>
-
-
-
+					<!-- -----------------------------end left-------------------------------------------- -->
+					<div class="col-xxl-4 col-xl-4 col-md-12 col-12 most-view">
+						<?php
+						include 'include/right_content.php';
+						?>
+					</div>
 					<?php
-					include 'include/searchbar.php';
-					include 'include/right_content.php';
-					?>
-
-
+							include 'include/pagination.php';
+						?>
 				</div>
-			</div>
-
 		</div>
 		<!-- -------------------------end content-------------------------------------------------- -->
 		<?php
@@ -188,9 +152,7 @@ $result_page = ($page - 1) * $post_per_page;
 		include 'include/gotop.php';
 		?>
 	</div>
-	</div>
-	</div>
-
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 	<script src="js/script.js"></script>
 </body>
 
