@@ -109,13 +109,6 @@ body {
 	background: #FFF;
 }
 
-.New_content_1 {
-	width: 100%;
-	height: auto;
-	float: left;
-	display: grid;
-	grid-template-columns: auto auto auto;
-}
 
 /***********************************left content******************************************/
 .left {
@@ -238,7 +231,8 @@ body {
 	margin-bottom: 27px;
 	background-color: #0075b0;
 	text-indent: 0;
-	display: inline-block;
+	display: flex;
+	align-items: center;
 	color: #ffffff;
 	font-family: "Roboto", "sans-serif";
 	font-size: 15px;
@@ -499,7 +493,6 @@ body {
 	width: 100%;
 	height: auto;
 	background: #FEFEFE;
-	float: left;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 	box-sizing: border-box;
 	padding-bottom: 20px;
@@ -515,11 +508,8 @@ body {
 }
 
 .des {
-	float: right;
 	height: auto;
-	margin-right: 10px;
 	width: 445px;
-	padding-bottom: 20px;
 }
 
 .maring-video {
@@ -758,6 +748,14 @@ html {
 
 .most-view {
 	display: none;
+}
+.detail-wrapper{
+	justify-content: center;
+}
+.img-detail{
+	border-radius: 10px;
+	object-fit: cover;
+	width: 100%;
 }
 
 /* Small devices (landscape phones, 576px up) */
