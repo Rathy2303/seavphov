@@ -45,7 +45,7 @@ include 'include/db.php';
 			<?php
 			include 'include/header.php';
 			?>
-			<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+			<nav class="navbar navbar-expand-lg" data-bs-theme="dark" style="background-color: #0075B0;">
 				<div class="container-fluid">
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
@@ -68,7 +68,7 @@ include 'include/db.php';
 							?>
 						</ul>
 						<form class="d-flex" role="search">
-							<input class="form-control me-2" type="text" class="search" id="searchid" name="search" placeholder="Search here..." aria-label="Search">
+							<input class="form-control me-2 bg-light" type="text" class="search" id="searchid" name="search" placeholder="Search here..." aria-label="Search">
 							<button class="btn btn-light" type="submit">Search</button>
 						</form>
 					</div>
