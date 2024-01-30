@@ -758,25 +758,21 @@ html {
 	width: 100%;
 }
 
+.header{
+	display: none;
+}
 /* Small devices (landscape phones, 576px up) */
 @media (min-width: 576px) {}
 
 /* Medium devices (tablet, 768px up) */
 @media (min-width: 768px) {
-	.header .logo {
-		display: block;
-		height: 80px;
-		object-fit: contain;
-	}
-
-	.header .slider {
-		width: 500px;
-		/*width="840"*/
-	}
 }
 
 /* Large devices (desktops, 992px up) */
 @media (min-width: 992px) {
+	.header{
+		display: flex;
+	}
 	.header .logo {
 		height: 100px;
 	}
