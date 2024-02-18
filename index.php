@@ -112,11 +112,6 @@ $result_page = ($page - 1) * $post_per_page;
 										<div class="view-detial">
 											<a title="<?= $post['title'] ?>" href="description.php?id=<?= $post['id'] ?>"><button>View</button> </a>
 										</div>
-										<div class="img-loader-box js-img-loader-<?= $post['id'] ?>" style="	display: flex;">
-											<div class="img-loader">
-
-											</div>
-										</div>
 									</div>
 									<div class="movie_title_1">
 										<span>
