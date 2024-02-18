@@ -24,10 +24,3 @@ function go_top(){
 // function loadImg(){
 //     document.querySelector('.img-loader-box').style.display = 'none';
 // }
-
-document.querySelectorAll('.img').forEach((item)=>{
-    const imgId = (item.dataset.id);
-    document.querySelector(`.js-img-${imgId}`).addEventListener('load',()=>{
-        document.querySelector(`.js-img-loader-${imgId}`).style.display = 'none';
-    })
-})
