@@ -10,6 +10,10 @@ body {
 	height: 100vh;
 }
 
+.container{
+	width: 100%;
+}
+
 /* width */
 ::-webkit-scrollbar {
 	width: 10px;
@@ -71,6 +75,9 @@ body {
 
 .menu {
 	width: 100%;
+}
+#searchid::placeholder{
+	color: #B6B6B6;
 }
 
 /***********************************back ad***************************************/
@@ -774,7 +781,8 @@ html {
 		display: flex;
 	}
 	.header .logo {
-		height: 100px;
+		height: 120px;
+		display: block;
 	}
 
 	.header .slider {
@@ -785,6 +793,9 @@ html {
 
 /* X-Large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
+	.header .logo{
+		display: block;
+	}
 	.most-view {
 		display: flex;
 	}
