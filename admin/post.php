@@ -209,7 +209,7 @@ $admin = getAdminInfo($db, $_SESSION['email']);
               <!-- End Book Url -->
               <div class="form-group">
                 <label for="exampleFormControlFile1">Image File</label>
-                <input type="file" name="image" id="image" class="form-control-file" id="exampleFormControlFile1">
+                <input type="file" accept="image/jpg , image/jpeg, image/png" name="image" id="image" class="form-control-file" id="exampleFormControlFile1">
               </div>
             </div>
             <div class="modal-footer">
@@ -248,51 +248,6 @@ $admin = getAdminInfo($db, $_SESSION['email']);
   </div>
   <!-- End Content -->
 
-
-  <!-- Page Content
-  <div style="margin-left:25%">
-
-    <div class="w3-container w3-teal">
-      <h1>Admin Panel</h1>
-    </div>
-    <div class="w3-container">
-      <div class="wrapper-content">
-        <form action="../include/addpost.php" method="post" enctype="multipart/form-data">
-          <h1>Add Post</h1>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Title</label>
-            <input type="text" name="title" class="form-control" id="title" placeholder="Title">
-          </div>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Book Url</label>
-            <input type="text" name="bookurl" class="form-control" id="bookurl" placeholder="Book Url">
-          </div>
-          <div class="mb-3">
-            <label for="option" class="form-label">Choose Book Type</label>
-            <select name="booktype" class="form-select">
-              <?php
-              $categories = getAllCategory($db);
-              foreach ($categories as $ct) {
-              ?> <option value="<?= $ct['id'] ?>"><?= $ct['name'] ?></option>
-
-              <?php
-              }
-              ?>
-            </select>
-
-          </div>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Image</label>
-            <input type="file" name="imagefile" value="" class="form-control" id="image">
-          </div>
-
-          <div class="text-center">
-            <button type="submit" name="addpost" id="addpost" class="btn btn-primary ">Add Post</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div> -->
   <!-- Link Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
