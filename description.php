@@ -53,7 +53,7 @@ include 'include/db.php';
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 							<li class="nav-item">
-								<a class="nav-link active" aria-current="page" href="#">Home</a>
+								<a class="nav-link active" aria-current="page" href="./index.php">Home</a>
 							</li>
 							<?php
 							$menu = "SELECT * FROM menu";
@@ -95,7 +95,7 @@ include 'include/db.php';
 					</div>
 					<div class="row detail-wrapper">
 						<div class="col-6">
-							<img src="images/book/<?= $post['image'] ?>" alt="<?= $post['title'] ?>" class="img-detail" />
+							<img src="./include/display_img.php?id=<?=$post_id?>" alt="<?= $post['title'] ?>" class="img-detail" />
 						</div>
 						<div class="col-6 des">
 							<input type="hidden" id="downloadid" name="downloadid" value="105" />
@@ -137,7 +137,7 @@ include 'include/db.php';
 						<div class="col-xxl-3 col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
 							<a style="text-decoration: none;" href="description.php?id=<?= $rpost['id'] ?>">
 								<div class="movie_image">
-									<img alt="<?= $rpost['title'] ?>" src="images/book/<?= $rpost['image'] ?>" />
+									<img alt="<?= $rpost['title'] ?>" src="./include/display_img.php?id=<?=$rpost['id'] ?>" />
 								</div>
 								<div class="movie_title_1">
 									<span>

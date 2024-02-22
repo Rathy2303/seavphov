@@ -83,14 +83,14 @@ $admin = getAdminInfo($db, $_SESSION['email']);
         </thead>
         <tbody>
           <?php
-          $fetchdata = mysqli_query($db, "SELECT book.title,book.book_url,book.image,book.id,book.category_id,category.name FROM book INNER JOIN category on book.category_id=category.id ORDER BY id DESC");
+          $fetchdata = mysqli_query($db, "SELECT book.title,book.book_url,book.id,book.category_id,category.name FROM book INNER JOIN category on book.category_id=category.id ORDER BY id DESC");
           while ($row = mysqli_fetch_assoc($fetchdata)) {
           ?>
             <tr>
               <th scope="row"><?= $row['title']; ?></th>
               <td><?= $row['name'] ?></td>
               <td class="d-flex">
-                <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-danger mr-1 js-btn-delete" data-id="<?= $row['id']; ?>" data-image="<?= $row['image']; ?>" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-danger mr-1 js-btn-delete" data-id="<?= $row['id']; ?>" data-toggle="modal" data-target="#deleteModal">Delete</button>
                 <button type="button" data-id="<?= $row['id'] ?>" data-title="<?= $row['title'] ?>" data-url="<?= $row['book_url'] ?>" data-type-id="<?= $row['category_id']; ?>" data-type="<?= $row['name'] ?>" class="btn btn-primary js-btn-edit" data-toggle="modal" data-target="#editModal">Edit</button>
               </td>
             </tr>

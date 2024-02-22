@@ -1,0 +1,12 @@
+.connection-status-wrapper{
+    width: 30%;
+    height: 80px;
+    right: 100px;
+    bottom:5px;
+    position: fixed;
+}
+#alert-js{
+    font-size: 20px;
+    font-weight: 400 !important;
+    display: none;
+}

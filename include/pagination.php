@@ -1,5 +1,5 @@
 <div class="pagination_center" style="margin: auto;">
-    <div class="pagination" style="display:<?php echo $dsplay?>">
+    <div class="pagination">
     <?php
        if($page>1)
        {

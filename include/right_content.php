@@ -10,7 +10,7 @@
         ?>
             <div class="new_movie">
                 <a title="<?= $post['title'] ?>" href="description.php?id=<?= $post['id'] ?>">
-                    <img alt="<?= $post['title'] ?>" src="images/book/<?= $post['image'] ?>" />
+                    <img alt="<?= $post['title'] ?>" src="../include/display_img.php?id=<?=$post['id']?>" />
                     <span>
                         <?= $post['title'] ?>
                     </span>
