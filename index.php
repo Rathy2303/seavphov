@@ -1,12 +1,12 @@
 <?php
-include 'include/db.php';
-if (isset($_GET['page'])) {
-	$page = $_GET['page'];
-} else {
-	$page = 1;
-};
-$post_per_page = 12;
-$result_page = ($page - 1) * $post_per_page;
+	require_once 'include/db.php';
+	if (isset($_GET['page'])) {
+		$page = $_GET['page'];
+	} else {
+		$page = 1;
+	};
+	$post_per_page = 12;
+	$result_page = ($page - 1) * $post_per_page;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +52,7 @@ $result_page = ($page - 1) * $post_per_page;
 		<div class="container">
 			<div class="wrap">
 				<?php
-				include 'include/header.php';
+					include 'include/header.php';
 				?>
 				<nav class="navbar navbar-expand-lg" data-bs-theme="dark" style="background-color: #0075B0;">
 					<div class="container-fluid">
@@ -62,18 +62,23 @@ $result_page = ($page - 1) * $post_per_page;
 						<div class="collapse navbar-collapse" id="navbarSupportedContent">
 							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 								<li class="nav-item">
-									<a class="nav-link active" aria-current="page" href="#">Home</a>
+									<a class="nav-link active" aria-current="page" href="./index.php">Home</a>
 								</li>
 								<?php
-								$menu = "SELECT * FROM menu";
-								$runPQ = mysqli_query($db, $menu);
-								while ($post = mysqli_fetch_assoc($runPQ)) {
-								?>
-									<li class="nav-item">
-										<a title="<?= $post['title'] ?>" class="nav-link" href='./type.php?category=<?= $post['url'] ?>'><?= $post['name'] ?></a>
-									</li>
-								<?php
-								}
+									try {
+										$menu = $db->prepare("SELECT * FROM menu");
+										$menu->execute();
+										$result = $menu->fetchAll(PDO::FETCH_CLASS);
+										foreach($result as $row){
+										?>
+											<li class="nav-item">
+												<a title="<?= $row->title?>" class="nav-link" href='./type.php?category=<?= $row->url?>'><?= $row->name?></a>
+											</li>
+										<?php
+									}
+									} catch (Exception $e) {
+										echo $e->getMessage();
+									}
 								?>
 							</ul>
 							<form class="d-flex" role="search">
@@ -99,32 +104,38 @@ $result_page = ($page - 1) * $post_per_page;
 						} else {
 							$postQuery = "SELECT * FROM book ORDER BY id DESC LIMIT $result_page,$post_per_page";
 						}
-
-						$runPQ = mysqli_query($db, $postQuery);
-						$getpage = mysqli_query($db, "SELECT * FROM book");
-						$total_post = mysqli_num_rows($getpage);
-						$total_pages = ceil($total_post / $post_per_page);
-
-						while ($post = mysqli_fetch_assoc($runPQ)) {
-						?>
-							<div class="col-xxl-3 col-xl-3 col-md-3 col-sm-6 col-6">
-								<div class="movie_image">
-									<img alt="<?= $post['title'] ?>" data-id="<?= $post['id'] ?>" class="img js-img-<?= $post['id'] ?>" src="./include/display_img.php?id=<?= $post['id'] ?>" />
-									<div class="view-detial">
-										<a title="<?= $post['title'] ?>" href="description.php?id=<?= $post['id'] ?>"><button>View</button> </a>
+						try {
+							$runPQ = $db->prepare($postQuery);
+							$runPQ->execute();
+							$posts = $runPQ->fetchAll(PDO::FETCH_CLASS);
+							$getpage = $db->prepare("SELECT * FROM book");
+							$getpage->execute();
+							$total_post = $getpage->rowCount();
+							$total_pages = ceil($total_post / $post_per_page);
+							foreach($posts as $post) {
+							?>
+								<div class="col-xxl-3 col-xl-3 col-md-3 col-sm-6 col-6">
+									<div class="movie_image">
+										<img alt="<?= $post->title?>" data-id="<?= $post->id?>" class="img js-img-<?= $post->id?>" src="./images/book/<?=$post->image?>" />
+										<div class="view-detial">
+											<a title="<?=$post->title?>" href="description.php?id=<?= $post->id?>"><button>View</button> </a>
+										</div>
+									</div>
+									<div class="movie_title_1">
+										<span>
+											<?= $post->title?>
+										</span><br />
+										<span style="color:#3c763d;">
+											<?=$post->view?> &nbsp;<i class="fa-solid fa-eye"></i>
+										</span>
 									</div>
 								</div>
-								<div class="movie_title_1">
-									<span>
-										<?= $post['title'] ?>
-									</span><br />
-									<span style="color:#3c763d;">
-										<?= $post['view'] ?> &nbsp;<i class="fa-solid fa-eye"></i>
-									</span>
-								</div>
-							</div>
-						<?php
+							<?php
+							}
+						} catch (Exception $e) {
+							echo $e->getMessage();
 						}
+						
 						?>
 					</div>
 					<!-- -------------------------------end new content--------------------------------------- -->
@@ -134,20 +145,16 @@ $result_page = ($page - 1) * $post_per_page;
 				<!-- -----------------------------end left-------------------------------------------- -->
 				<div class="col-xxl-4 col-xl-4 col-md-12 col-12 most-view">
 					<?php
-					include 'include/right_content.php';
+						include 'include/right_content.php';
 					?>
 				</div>
 				<?php
-				include 'include/pagination.php';
+					include 'include/pagination.php';
 				?>
 			</div>
 
 		</div>
 		<!-- -------------------------end content-------------------------------------------------- -->
-		<?php
-		include 'include/footer.php';
-		include 'include/gotop.php';
-		?>
 
 		<!-- Connection Status Alert -->
 		<div class="connection-status-wrapper">

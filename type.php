@@ -48,22 +48,27 @@ $result = ($page - 1) * $post_per_page;
                                 <a class="nav-link" aria-current="page" href="./index.php">Home</a>
                             </li>
                             <?php
-                            $menu = "SELECT * FROM menu";
-                            $runPQ = mysqli_query($db, $menu);
-                            while ($post = mysqli_fetch_assoc($runPQ)) {
-                                if ($post['url'] == $category) {
-                            ?>
-                                    <li class="nav-item"><a class="nav-link active" title="<?= $post['title'] ?>" href='./type.php?category=<?= $post['url'] ?>'><span><?= $post['name'] ?></span></a></li>
-                                <?php
-                                } else {
+                            try {
+                                $menu = $db->prepare("SELECT * FROM menu");
+                                $menu->execute();
+                                $posts = $menu->fetchAll(PDO::FETCH_CLASS);
+                                foreach($posts as $post) {
+                                    if ($post->url == $category) {
                                 ?>
-                                    <li class="nav-item"><a class="nav-link" title="<?= $post['title'] ?>" href='./type.php?category=<?= $post['url'] ?>'><span><?= $post['name'] ?></span></a></li>
-                            <?php
+                                        <li class="nav-item"><a class="nav-link active" title="<?=$post->title?>" href='./type.php?category=<?= $post->url?>'><span><?= $post->name?></span></a></li>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <li class="nav-item"><a class="nav-link" title="<?= $post->title?>" href='./type.php?category=<?= $post->url?>'><span><?= $post->name?></span></a></li>
+                                <?php
+                                    }
                                 }
+                            } catch (Exception $e) {
+                                echo $e->getMessage();
                             }
                             ?>
                         </ul>
-                        <form class="d-flex" role="search" action="?category=<?= $category ?>&search" method="post">
+                        <form class="d-flex" role="search" action="?category=<?=$category ?>&search" method="post">
                             <input class="form-control me-2 bg-light" type="text" class="search" id="searchid" name="search" placeholder="Search here...">
                             <button class="btn btn-light" type="submit">Search</button>
                         </form>
@@ -82,34 +87,41 @@ $result = ($page - 1) * $post_per_page;
                     <?php
                     if (isset($_GET['search'])) {
                         $search =  $_POST['search'];
-                        $book = mysqli_query($db, "SELECT book.id,book.view,book.title,book.image FROM book INNER JOIN category ON book.category_id = category.id WHERE category.name='$category' AND book.title LIKE '%$search%' ORDER BY id DESC LIMIT $result,$post_per_page");
+                        $book = "SELECT book.id,book.view,book.title,book.image FROM book INNER JOIN category ON book.category_id = category.id WHERE category.name='$category' AND book.title LIKE '%$search%' ORDER BY id DESC LIMIT $result,$post_per_page";
                     } else
-                        $book = mysqli_query($db, "SELECT book.id,book.view,book.title,book.image FROM book INNER JOIN category ON book.category_id = category.id WHERE category.name='$category' ORDER BY id DESC LIMIT $result,$post_per_page");
+                        $book = "SELECT book.id,book.view,book.title,book.image FROM book INNER JOIN category ON book.category_id = category.id WHERE category.name='$category' ORDER BY id DESC LIMIT $result,$post_per_page";
+                    try {
+                        $stmp = $db->prepare($book);
+                        $stmp->execute();
+                        $rows = $stmp->fetchAll(PDO::FETCH_CLASS);
+                        foreach($rows as $row) {
+                        ?>
+                            <!-- ------movie -------- -->
+                            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6">
+                                <div class="movie_image">
+                                    <img alt="<?=$row->title?>" src="images/book/<?=$row->image?>" />
+                                    <div class="view-detial">
+                                        <a title="<?=$row->title?>" href="description.php?id=<?=$row->id?>"><button>View</button> </a>
 
-                    while ($row = mysqli_fetch_assoc($book)) {
-                    ?>
-                        <!-- ------movie -------- -->
-                        <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6">
-                            <div class="movie_image">
-                                <img alt="<?= $row['title'] ?>" src="images/book/<?= $row['image'] ?>" />
-                                <div class="view-detial">
-                                    <a title="<?= $row['title'] ?>" href="description.php?id=<?= $row['id'] ?>"><button>View</button> </a>
-
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="movie_title_1">
-                                <span><?= $row['title'] ?></span><br />
-                                <span style="color:#3c763d"><?= $row['view'] ?>&nbsp;<i class="fa-solid fa-eye"></i></span>
-                            </div>
+                                <div class="movie_title_1">
+                                    <span><?=$row->title?></span><br />
+                                    <span style="color:#3c763d"><?= $row->view?>&nbsp;<i class="fa-solid fa-eye"></i></span>
+                                </div>
 
-                        </div>
-                        <!-- ------end movie -------- -->
-                    <?php
+                            </div>
+                            <!-- ------end movie -------- -->
+                        <?php
+                        }
+                    } catch (Exception $e) {
+                        echo $e->getMessage();
                     }
                     // -- ORDER BY id DESC LIMIT $result,$post_per_page"
                     // $prun = mysqli_query($db, $pquery);
-                    $getpage = mysqli_query($db, "SELECT*FROM book WHERE category_id=1");
-                    $total_post = mysqli_num_rows($getpage);
+                    $getpage =$db->prepare("SELECT*FROM book WHERE category_id=1");
+                    $getpage->execute();
+                    $total_post = $getpage->rowCount();
                     $total_pages = ceil($total_post / $post_per_page);
                     ?>
                 </div>

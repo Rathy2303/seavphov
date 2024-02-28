@@ -1,4 +1,4 @@
-<div class="pagination_center" style="margin: auto;">
+<div class="pagination_center" style="margin: auto;margin-bottom: 20px">
     <div class="pagination">
     <?php
        if($page>1)

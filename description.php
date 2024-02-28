@@ -1,5 +1,5 @@
 <?php
-include 'include/db.php';
+	include 'include/db.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,15 +22,18 @@ include 'include/db.php';
 	<!--- Facebook Meta Key --->
 	<?php
 	$post_id = $_GET['id'];
-	$postQuery = "SELECT * FROM book WHERE id=$post_id";
-	$runPQ = mysqli_query($db, $postQuery);
-	$post = mysqli_fetch_assoc($runPQ);
-	?>
-	<title>
-		<?= $post['title'] ?>
-	</title>
-	<?php
-
+	try {
+		$title = $db->prepare("SELECT title FROM book WHERE id=?");
+		$title->execute([$post_id]);
+		$post = $title->fetch();
+		?>
+		<title>
+			<?=$post['title']?>
+		</title>
+		<?php
+	} catch (Exception $e) {
+		echo $e->getMessage();
+	}
 	?>
 	<link href="css/mainstyle.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
@@ -53,19 +56,24 @@ include 'include/db.php';
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 							<li class="nav-item">
-								<a class="nav-link active" aria-current="page" href="./index.php">Home</a>
+								<a class="nav-link" aria-current="page" href="./index.php">Home</a>
 							</li>
 							<?php
-							$menu = "SELECT * FROM menu";
-							$runPQ = mysqli_query($db, $menu);
-							while ($post = mysqli_fetch_assoc($runPQ)) {
-							?>
-								<li class="nav-item">
-									<a title="<?= $post['title'] ?>" class="nav-link" href='./type.php?category=<?= $post['url'] ?>'><?= $post['name'] ?></a>
-								</li>
-							<?php
-							}
-							?>
+									try {
+										$menu = $db->prepare("SELECT * FROM menu");
+										$menu->execute();
+										$result = $menu->fetchAll(PDO::FETCH_CLASS);
+										foreach($result as $row){
+										?>
+											<li class="nav-item">
+												<a title="<?= $row->title?>" class="nav-link" href='./type.php?category=<?= $row->url?>'><?= $row->name?></a>
+											</li>
+										<?php
+									}
+									} catch (Exception $e) {
+										echo $e->getMessage();
+									}
+								?>
 						</ul>
 						<form class="d-flex" role="search">
 							<input class="form-control me-2 bg-light" type="text" class="search" id="searchid" name="search" placeholder="Search here..." aria-label="Search">
@@ -83,41 +91,45 @@ include 'include/db.php';
 				<div class="movie_des">
 					<?php
 					$post_id = $_GET['id'];
-					mysqli_query($db, "UPDATE book SET view=view+1 WHERE id=$post_id");
-					$postQuery = "SELECT * FROM book WHERE id=$post_id";
-					$runPQ = mysqli_query($db, $postQuery);
-					$post = mysqli_fetch_assoc($runPQ);
-					?>
-					<div style="width:100%; background:#0075B0; margin-top:-12px;">
-						<h1 style="margin-left:10px; font-size:18px;padding:10px 0;color:white;">
-							<?= $post['title'] ?>
-						</h1>
-					</div>
-					<div class="row detail-wrapper">
-						<div class="col-6">
-							<img src="./include/display_img.php?id=<?=$post_id?>" alt="<?= $post['title'] ?>" class="img-detail" />
+					try {
+						$db->prepare("UPDATE book SET view=view+1 WHERE id=$post_id")->execute();
+						$postQuery = $db->prepare("SELECT * FROM book WHERE id=$post_id");
+						$postQuery->execute();
+						$post = $postQuery->fetch();
+						?>
+						<div style="width:100%; background:#0075B0; margin-top:-12px;">
+							<h1 style="margin-left:10px; font-size:18px;padding:10px 0;color:white;">
+								<?=$post['title']?>
+							</h1>
 						</div>
-						<div class="col-6 des">
-							<input type="hidden" id="downloadid" name="downloadid" value="105" />
-							<p style="padding:0; margin:0;; font-size:15px"><strong>Title : </strong></p>
-							<h4 style="padding:0; margin:0; font-size:15px">&nbsp; <?= $post['title'] ?></h4>
-							<p style="padding:0; margin-top: 5px; font-size:14px">
-								<strong>Views : </strong> <b style="color: #b84c4c;">
-									<?= $post['view'] ?>&ensp;Times
-								</b>
-							</p>
-							<p style="padding:0; margin:0;font-size:14px">
-								<strong>Downloaded : </strong>
-								<?= $post['download'] ?>
-							</p>
-							<br>
-							<a class="download_id" href="include/download.php?id=<?= $post['id'] ?>" target="_blank">
-								<!-- <img style="float:left" src="images/download.jpg" width="150" /> -->
-								<button class="button-50" role="button">Download</button>
-							</a>
+						<div class="row detail-wrapper">
+							<div class="col-6" style="height: 310px !important;">
+								<img src="./images/book/<?=$post['image']?>" alt="<?= $post['title']?>" class="img-detail" />
+							</div>
+							<div class="col-6 des">
+								<input type="hidden" id="downloadid" name="downloadid" value="105" />
+								<p style="padding:0; margin:0;; font-size:15px"><strong>Title : </strong></p>
+								<h4 style="padding:0; margin:0; font-size:15px">&nbsp; <?= $post['title']?></h4>
+								<p style="padding:0; margin-top: 5px; font-size:14px">
+									<strong>Views : </strong> <b style="color: #b84c4c;">
+										<?=$post['view']?>&ensp;Times
+									</b>
+								</p>
+								<p style="padding:0; margin:0;font-size:14px">
+									<strong>Downloaded : </strong>
+									<?= $post['download']?>
+								</p>
+								<br>
+								<a class="download_id" href="include/download.php?id=<?=$post['id']?>" target="_blank">
+									<!-- <img style="float:left" src="images/download.jpg" width="150" /> -->
+									<button class="button-50" role="button">Download</button>
+								</a>
+							</div>
 						</div>
-					</div>
-					<?php
+						<?php
+					} catch (Exception $e) {
+						echo $e->getMessage();
+					}
 
 					?>
 				</div>
@@ -127,31 +139,36 @@ include 'include/db.php';
 				<div class="row">
 					<!-- ------movie -------- -->
 					<?php
-					$pquery = "SELECT*FROM book WHERE category_id={$post['category_id']} ORDER BY id DESC LIMIT 7";
-					$prun = mysqli_query($db, $pquery);
-					while ($rpost = mysqli_fetch_assoc($prun)) {
-						if ($rpost['id'] == $post_id) {
-							continue;
+						try {
+							$pquery = $db->prepare("SELECT*FROM book WHERE category_id={$post['category_id']} ORDER BY id DESC LIMIT 7");
+							$pquery->execute();
+							$rposts = $pquery->fetchAll(PDO::FETCH_CLASS);
+							foreach($rposts as $rpost) {
+								if ($rpost->id == $post_id) {
+									continue;
+								}
+							?>
+								<div class="col-xxl-3 col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
+									<a style="text-decoration: none;" href="description.php?id=<?= $rpost->id?>">
+										<div class="movie_image">
+											<img alt="<?= $rpost->title?>" src="./images/book/<?=$rpost->image?>" />
+										</div>
+										<div class="movie_title_1">
+											<span>
+												<?= $rpost->title?>
+											</span><br />
+											<span style="color:#3c763d">
+												<?= $rpost->view?>&nbsp;<i class="fa-solid fa-eye"></i>
+											</span>
+										</div>
+									</a>
+								</div>
+								<!-- ------end movie -------- -->
+							<?php
+							}
+						} catch (Exception $e) {
+							echo $e->getMessage();
 						}
-					?>
-						<div class="col-xxl-3 col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
-							<a style="text-decoration: none;" href="description.php?id=<?= $rpost['id'] ?>">
-								<div class="movie_image">
-									<img alt="<?= $rpost['title'] ?>" src="./include/display_img.php?id=<?=$rpost['id'] ?>" />
-								</div>
-								<div class="movie_title_1">
-									<span>
-										<?= $rpost['title'] ?>
-									</span><br />
-									<span style="color:#3c763d">
-										<?= $rpost['view'] ?>&nbsp;<i class="fa-solid fa-eye"></i>
-									</span>
-								</div>
-							</a>
-						</div>
-						<!-- ------end movie -------- -->
-					<?php
-					}
 					?>
 				</div>
 				<!-- -------------------------------new content_1--------------------------------------- -->
