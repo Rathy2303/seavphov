@@ -1,6 +1,6 @@
 <?php
-	require_once 'include/db.php';
 	session_start();
+	require_once './include/db.php';
 	if (isset($_GET['page'])) {
 		$page = $_GET['page'];
 	} else {
@@ -10,11 +10,10 @@
 	$content_visible = "block";
 	$construction_visible = "none";
 	try {
-		//code...
-		$site_status = $db->prepare("SELECT offline FROM site_config");
-		$site_status->execute();
-		$status = $site_status->fetch();
-		if($status[0] == 1)
+		$myfile = fopen("site_config.txt",'r');
+		$status = fread($myfile,filesize("site_config.txt"));
+		fclose($myfile);
+		if($status == "site_contruction = true")
 		{
 			$construction_visible = "block";
 			$content_visible = "hide_content";
@@ -22,7 +21,60 @@
 	} catch (Exception $e) {
 		echo $e;
 	}
+	$arr = [];
 
+	try {
+		$stmp = $db->prepare("SELECT * FROM category");
+		$stmp->execute();
+		$result = $stmp->fetchAll(PDO::FETCH_ASSOC);
+		foreach($result as $row){
+			$arr[$row['id']]['name'] = $row['name'];
+			$arr[$row['id']]['parents_id'] = $row['parents_id'];
+		}
+		
+	} catch (Exception $e) {
+		
+	}
+
+	$html = '';
+	function buildMenuTree($arr,$parent,$level = 0,$prelevel=-1){
+
+		global $html;
+		foreach($arr as $id=>$data){
+			if($parent==$data['parents_id']){
+				if($level>$prelevel){
+					if($html==''){
+							$html.='<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+										<li class="nav-item">
+											<a class="nav-link active" aria-current="page" href="./index.php"><i class="fa-solid fa-house"></i></a>
+										</li>';
+					}else{
+						$html.='<ul class="dropdown-menu" aria-labelledby="navbarDropdown">';
+					}
+					
+				}
+				if($level==$prelevel){
+					$html.='</li>';
+				}
+				$html.='<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+					'.$data['name'].'
+				</a>';
+				if($level>$prelevel){
+					$prelevel=$level;
+				}
+				$level++;
+				buildMenuTree($arr,$id,$level,$prelevel);
+				$level--;
+			}
+		}
+		if($level==$prelevel){
+			$html.='</li></ul>';
+		}
+
+		return $html;
+
+	}
 
 	$post_per_page = 12;
 	$result_page = ($page - 1) * $post_per_page;
@@ -79,7 +131,7 @@
 							<span class="navbar-toggler-icon"></span>
 						</button>
 						<div class="collapse navbar-collapse" id="navbarSupportedContent">
-							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+							<!-- <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 								<li class="nav-item">
 									<a class="nav-link active" aria-current="page" href="./index.php">Home</a>
 								</li>
@@ -99,7 +151,20 @@
 										echo $e->getMessage();
 									}
 								?>
-							</ul>
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+										Dropdown
+									</a>
+									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+										<li><a class="dropdown-item" href="#">Action</a></li>
+										<li><a class="dropdown-item" href="#">Another action</a></li>
+										<li><hr class="dropdown-divider"></li>
+										<li><a class="dropdown-item" href="#">Something else here</a></li>
+									</ul>
+								</li>
+							</ul> -->
+
+							<?php echo buildMenuTree($arr,0)?>
 							<form class="d-flex" role="search">
 								<input class="form-control me-2 bg-light" type="text" class="search" id="searchid" name="search" placeholder="Search here..." aria-label="Search">
 								<button class="btn btn-light" type="submit">Search</button>
@@ -126,7 +191,7 @@
 						try {
 							$runPQ = $db->prepare($postQuery);
 							$runPQ->execute();
-							$posts = $runPQ->fetchAll(PDO::FETCH_CLASS);
+							$posts = $runPQ->fetchAll(PDO::FETCH_CLASS); 
 							$getpage = $db->prepare("SELECT * FROM book");
 							$getpage->execute();
 							$total_post = $getpage->rowCount();

@@ -3,14 +3,14 @@
     $content_visible = "block";
     $construction_visible = "none";
     try {
-        //code...
-        $site_status = $db->prepare("SELECT offline FROM site_config");
-        $site_status->execute();
-        $status = $site_status->fetch();
-        if ($status[0] == 1) {
-            $construction_visible = "block";
-            $content_visible = "hide_content";
-        }
+        $myfile = fopen("site_config.txt",'r');
+		$status = fread($myfile,filesize("site_config.txt"));
+		fclose($myfile);
+		if($status == "site_contruction = true")
+		{
+			$construction_visible = "block";
+			$content_visible = "hide_content";
+		}
     } catch (Exception $e) {
         echo $e;
     }

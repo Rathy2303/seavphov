@@ -48,9 +48,10 @@ $admin = getAdminInfo($db, $_SESSION['email']);
             <div class="checkbox-wrapper-22">
               <label class="switch" for="checkbox">
                 <?php
-                  $status = $db->query("SELECT offline FROM site_config");
-                  $result = $status->fetch_array();
-                  if($result[0] == '0'){
+                  $myfile = fopen("../site_config.txt",'r');
+                  $status = fread($myfile,filesize("../site_config.txt"));
+                  fclose($myfile);
+                  if($status == "site_contruction = false"){
                     ?>
                       <input type="checkbox" id="checkbox"/>
                     <?php
