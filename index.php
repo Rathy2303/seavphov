@@ -1,10 +1,29 @@
 <?php
 	require_once 'include/db.php';
+	session_start();
 	if (isset($_GET['page'])) {
 		$page = $_GET['page'];
 	} else {
 		$page = 1;
 	};
+
+	$content_visible = "block";
+	$construction_visible = "none";
+	try {
+		//code...
+		$site_status = $db->prepare("SELECT offline FROM site_config");
+		$site_status->execute();
+		$status = $site_status->fetch();
+		if($status[0] == 1)
+		{
+			$construction_visible = "block";
+			$content_visible = "hide_content";
+		}
+	} catch (Exception $e) {
+		echo $e;
+	}
+
+
 	$post_per_page = 12;
 	$result_page = ($page - 1) * $post_per_page;
 ?>
@@ -48,7 +67,7 @@
 		<div class="loading-page-animetion">
 		</div>
 	</div>
-	<div class="all-content" style="display: none;">
+	<div class="all-content <?=$content_visible?>" style="display: none">
 		<div class="container">
 			<div class="wrap">
 				<?php
@@ -166,9 +185,14 @@
 		</div>
 		<!-- End Connection Status Alert -->
 	</div>
+
+	<div class="construction_mode" style="display:<?=$construction_visible?>">
+		<img src="./images/banner.png" alt="">
+	</div>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 	<script src="js/script.js"></script>
 	<script src="js/connection_status.js"></script>
+	
 </body>
 
 </html>

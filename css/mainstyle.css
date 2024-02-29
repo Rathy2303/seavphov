@@ -731,6 +731,15 @@ html {
 .most-view {
 	display: none;
 }
+.hide_content{
+	display: none !important;
+}
+.construction_mode{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+}
 .detail-wrapper{
 	justify-content: center;
 }

@@ -1,5 +1,19 @@
 <?php
-	include 'include/db.php';
+include 'include/db.php';
+	$content_visible = "block";
+	$construction_visible = "none";
+	try {
+		//code...
+		$site_status = $db->prepare("SELECT offline FROM site_config");
+		$site_status->execute();
+		$status = $site_status->fetch();
+		if ($status[0] == 1) {
+			$construction_visible = "block";
+			$content_visible = "hide_content";
+		}
+	} catch (Exception $e) {
+		echo $e;
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,11 +40,11 @@
 		$title = $db->prepare("SELECT title FROM book WHERE id=?");
 		$title->execute([$post_id]);
 		$post = $title->fetch();
-		?>
+	?>
 		<title>
-			<?=$post['title']?>
+			<?= $post['title'] ?>
 		</title>
-		<?php
+	<?php
 	} catch (Exception $e) {
 		echo $e->getMessage();
 	}
@@ -43,152 +57,165 @@
 </head>
 
 <body>
-	<div class="container">
-		<div class="wrap">
-			<?php
-			include 'include/header.php';
-			?>
-			<nav class="navbar navbar-expand-lg" data-bs-theme="dark" style="background-color: #0075B0;">
-				<div class="container-fluid">
-					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>
-					</button>
-					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-							<li class="nav-item">
-								<a class="nav-link" aria-current="page" href="./index.php">Home</a>
-							</li>
-							<?php
-									try {
-										$menu = $db->prepare("SELECT * FROM menu");
-										$menu->execute();
-										$result = $menu->fetchAll(PDO::FETCH_CLASS);
-										foreach($result as $row){
-										?>
-											<li class="nav-item">
-												<a title="<?= $row->title?>" class="nav-link" href='./type.php?category=<?= $row->url?>'><?= $row->name?></a>
-											</li>
-										<?php
-									}
-									} catch (Exception $e) {
-										echo $e->getMessage();
-									}
-								?>
-						</ul>
-						<form class="d-flex" role="search">
-							<input class="form-control me-2 bg-light" type="text" class="search" id="searchid" name="search" placeholder="Search here..." aria-label="Search">
-							<button class="btn btn-light" type="submit">Search</button>
-						</form>
-					</div>
-				</div>
-			</nav>
+	<div class="page-loader">
+		<div class="loading-page-animetion">
 		</div>
-		<!-- -------------------------content-------------------------------------------------- -->
-		<div class="row" style="margin-top: 20px;">
-			<!-- ---------------------------left-------------------------------------------------- -->
-			<div class="col-xxl-8 col-xl-8 col-lg-8 col-md-12">
-				<!-- -------------------------------end new content--------------------------------------- -->
-				<div class="movie_des">
-					<?php
-					$post_id = $_GET['id'];
-					try {
-						$db->prepare("UPDATE book SET view=view+1 WHERE id=$post_id")->execute();
-						$postQuery = $db->prepare("SELECT * FROM book WHERE id=$post_id");
-						$postQuery->execute();
-						$post = $postQuery->fetch();
-						?>
-						<div style="width:100%; background:#0075B0; margin-top:-12px;">
-							<h1 style="margin-left:10px; font-size:18px;padding:10px 0;color:white;">
-								<?=$post['title']?>
-							</h1>
+	</div>
+	<div class="all-content <?= $content_visible ?>" style="display: none">
+		<div class="container <?= $content_visible ?>">
+			<div class="wrap">
+				<?php
+				include 'include/header.php';
+				?>
+				<nav class="navbar navbar-expand-lg" data-bs-theme="dark" style="background-color: #0075B0;">
+					<div class="container-fluid">
+						<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>
+						</button>
+						<div class="collapse navbar-collapse" id="navbarSupportedContent">
+							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+								<li class="nav-item">
+									<a class="nav-link" aria-current="page" href="./index.php">Home</a>
+								</li>
+								<?php
+								try {
+									$menu = $db->prepare("SELECT * FROM menu");
+									$menu->execute();
+									$result = $menu->fetchAll(PDO::FETCH_CLASS);
+									foreach ($result as $row) {
+								?>
+										<li class="nav-item">
+											<a title="<?= $row->title ?>" class="nav-link" href='./type.php?category=<?= $row->url ?>'><?= $row->name ?></a>
+										</li>
+								<?php
+									}
+								} catch (Exception $e) {
+									echo $e->getMessage();
+								}
+								?>
+							</ul>
+							<form class="d-flex" role="search">
+								<input class="form-control me-2 bg-light" type="text" class="search" id="searchid" name="search" placeholder="Search here..." aria-label="Search">
+								<button class="btn btn-light" type="submit">Search</button>
+							</form>
 						</div>
-						<div class="row detail-wrapper">
-							<div class="col-6" style="height: 310px !important;">
-								<img src="./images/book/<?=$post['image']?>" alt="<?= $post['title']?>" class="img-detail" />
-							</div>
-							<div class="col-6 des">
-								<input type="hidden" id="downloadid" name="downloadid" value="105" />
-								<p style="padding:0; margin:0;; font-size:15px"><strong>Title : </strong></p>
-								<h4 style="padding:0; margin:0; font-size:15px">&nbsp; <?= $post['title']?></h4>
-								<p style="padding:0; margin-top: 5px; font-size:14px">
-									<strong>Views : </strong> <b style="color: #b84c4c;">
-										<?=$post['view']?>&ensp;Times
-									</b>
-								</p>
-								<p style="padding:0; margin:0;font-size:14px">
-									<strong>Downloaded : </strong>
-									<?= $post['download']?>
-								</p>
-								<br>
-								<a class="download_id" href="include/download.php?id=<?=$post['id']?>" target="_blank">
-									<!-- <img style="float:left" src="images/download.jpg" width="150" /> -->
-									<button class="button-50" role="button">Download</button>
-								</a>
-							</div>
-						</div>
+					</div>
+				</nav>
+			</div>
+			<!-- -------------------------content-------------------------------------------------- -->
+			<div class="row" style="margin-top: 20px;">
+				<!-- ---------------------------left-------------------------------------------------- -->
+				<div class="col-xxl-8 col-xl-8 col-lg-8 col-md-12">
+					<!-- -------------------------------end new content--------------------------------------- -->
+					<div class="movie_des">
 						<?php
-					} catch (Exception $e) {
-						echo $e->getMessage();
-					}
+						$post_id = $_GET['id'];
+						try {
+							$db->prepare("UPDATE book SET view=view+1 WHERE id=$post_id")->execute();
+							$postQuery = $db->prepare("SELECT * FROM book WHERE id=$post_id");
+							$postQuery->execute();
+							$post = $postQuery->fetch();
+						?>
+							<div style="width:100%; background:#0075B0; margin-top:-12px;">
+								<h1 style="margin-left:10px; font-size:18px;padding:10px 0;color:white;">
+									<?= $post['title'] ?>
+								</h1>
+							</div>
+							<div class="row detail-wrapper">
+								<div class="col-6" style="height: 310px !important;">
+									<img src="./images/book/<?= $post['image'] ?>" alt="<?= $post['title'] ?>" class="img-detail" />
+								</div>
+								<div class="col-6 des">
+									<input type="hidden" id="downloadid" name="downloadid" value="105" />
+									<p style="padding:0; margin:0;; font-size:15px"><strong>Title : </strong></p>
+									<h4 style="padding:0; margin:0; font-size:15px">&nbsp; <?= $post['title'] ?></h4>
+									<p style="padding:0; margin-top: 5px; font-size:14px">
+										<strong>Views : </strong> <b style="color: #b84c4c;">
+											<?= $post['view'] ?>&ensp;Times
+										</b>
+									</p>
+									<p style="padding:0; margin:0;font-size:14px">
+										<strong>Downloaded : </strong>
+										<?= $post['download'] ?>
+									</p>
+									<br>
+									<a class="download_id" href="include/download.php?id=<?= $post['id'] ?>" target="_blank">
+										<!-- <img style="float:left" src="images/download.jpg" width="150" /> -->
+										<button class="button-50" role="button">Download</button>
+									</a>
+								</div>
+							</div>
+						<?php
+						} catch (Exception $e) {
+							echo $e->getMessage();
+						}
 
-					?>
-				</div>
-				<div class="content_title">
-					<h4>Related Books</h4>
-				</div>
-				<div class="row">
-					<!-- ------movie -------- -->
-					<?php
+						?>
+					</div>
+					<div class="content_title">
+						<h4>Related Books</h4>
+					</div>
+					<div class="row">
+						<!-- ------movie -------- -->
+						<?php
 						try {
 							$pquery = $db->prepare("SELECT*FROM book WHERE category_id={$post['category_id']} ORDER BY id DESC LIMIT 7");
 							$pquery->execute();
 							$rposts = $pquery->fetchAll(PDO::FETCH_CLASS);
-							foreach($rposts as $rpost) {
+							foreach ($rposts as $rpost) {
 								if ($rpost->id == $post_id) {
 									continue;
 								}
-							?>
+						?>
 								<div class="col-xxl-3 col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
-									<a style="text-decoration: none;" href="description.php?id=<?= $rpost->id?>">
+									<a style="text-decoration: none;" href="description.php?id=<?= $rpost->id ?>">
 										<div class="movie_image">
-											<img alt="<?= $rpost->title?>" src="./images/book/<?=$rpost->image?>" />
+											<img alt="<?= $rpost->title ?>" src="./images/book/<?= $rpost->image ?>" />
 										</div>
 										<div class="movie_title_1">
 											<span>
-												<?= $rpost->title?>
+												<?= $rpost->title ?>
 											</span><br />
 											<span style="color:#3c763d">
-												<?= $rpost->view?>&nbsp;<i class="fa-solid fa-eye"></i>
+												<?= $rpost->view ?>&nbsp;<i class="fa-solid fa-eye"></i>
 											</span>
 										</div>
 									</a>
 								</div>
 								<!-- ------end movie -------- -->
-							<?php
+						<?php
 							}
 						} catch (Exception $e) {
 							echo $e->getMessage();
 						}
+						?>
+					</div>
+					<!-- -------------------------------new content_1--------------------------------------- -->
+				</div>
+				<!-- -----------------------------end left-------------------------------------------- -->
+				<div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 most-view">
+					<!-- ------------------search ------------------------ -->
+					<?php
+					include 'include/right_content.php';
 					?>
 				</div>
-				<!-- -------------------------------new content_1--------------------------------------- -->
-			</div>
-			<!-- -----------------------------end left-------------------------------------------- -->
-			<div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 most-view">
-				<!-- ------------------search ------------------------ -->
-				<?php
-				include 'include/right_content.php';
-				?>
 			</div>
 		</div>
+		<?php
+		include 'include/footer.php';
+		include 'include/gotop.php';
+		?>
+	</div>
+	</div>
+	</div>
+
+	<div class="construction_mode" style="display:<?= $construction_visible ?>">
+		<img src="./images/banner.png" alt="">
 	</div>
 	<!-- -------------------------end content-------------------------------------------------- -->
-	<?php
-	include 'include/footer.php';
-	include 'include/gotop.php';
-	?>
-	</div>
-	</div>
+
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+	<script src="js/script.js"></script>
 </body>
+
 </html>

@@ -44,6 +44,90 @@ $admin = getAdminInfo($db, $_SESSION['email']);
           </li>
         </ul>
         <ul class="navbar-nav">
+          <li class="checkbox">
+            <div class="checkbox-wrapper-22">
+              <label class="switch" for="checkbox">
+                <?php
+                  $status = $db->query("SELECT offline FROM site_config");
+                  $result = $status->fetch_array();
+                  if($result[0] == '0'){
+                    ?>
+                      <input type="checkbox" id="checkbox"/>
+                    <?php
+                  }
+                  else{
+                    ?>
+                      <input type="checkbox" id="checkbox" checked/>
+                    <?php
+                  }
+                
+                ?>
+                
+                <div class="slider round"></div>
+              </label>
+            </div>
+
+            <style>
+              .checkbox{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+              .checkbox-wrapper-22{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+              .checkbox-wrapper-22 .switch {
+                display: inline-block;
+                height: 24px;
+                position: relative;
+                width: 53px;
+              }
+
+              .checkbox-wrapper-22 .switch input {
+                display:none;
+              }
+
+              .checkbox-wrapper-22 .slider {
+                background-color: #ccc;
+                bottom: 0;
+                cursor: pointer;
+                left: 0;
+                position: absolute;
+                right: 0;
+                top: 0;
+                transition: .4s;
+              }
+
+              .checkbox-wrapper-22 .slider:before {
+                background-color: #fff;
+                bottom: 2px;
+                content: "";
+                height: 20px;
+                left: 4px;
+                position: absolute;
+                transition: .4s;
+                width: 20px;
+              }
+
+              .checkbox-wrapper-22 input:checked + .slider {
+                background-color: #66bb6a;
+              }
+
+              .checkbox-wrapper-22 input:checked + .slider:before {
+                transform: translateX(26px);
+              }
+
+              .checkbox-wrapper-22 .slider.round {
+                border-radius: 34px;
+              }
+
+              .checkbox-wrapper-22 .slider.round:before {
+                border-radius: 50%;
+              }
+            </style>
+          </li>
           <li class="nav-item" id="notification_box">
             <a class="nav-link" href="../include/logout.php">
                 <i class="fa-solid fa-bell"></i>
