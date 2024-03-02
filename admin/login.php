@@ -9,14 +9,14 @@
   }
   if(isset($_POST['login'])){
     
-    $email=mysqli_real_escape_string($db,$_POST['email']);
+    $email= $_POST['email'];
 
-    $pass=mysqli_real_escape_string($db,$_POST['password']);
+    $pass=$_POST['password'];
 
-    $query="SELECT * FROM admin where email='$email' AND password='$pass'";
-    $runquery=mysqli_query($db,$query);
-    $result = mysqli_fetch_assoc($runquery);
-    if(mysqli_num_rows($runquery)){
+    $query= $db->prepare("SELECT * FROM admin where email='$email' AND password='$pass'");
+    $query->execute();
+    $result = $query->fetchAll(PDO::FETCH_CLASS);
+    if($query->rowCount() > 0){
 
       $_SESSION['isUserLoggedIn']=true;
       $_SESSION['LAST_LOGIN_TIME']= time();

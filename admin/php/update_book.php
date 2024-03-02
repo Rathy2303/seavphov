@@ -13,25 +13,14 @@
     
         // Update To Database
         if(move_uploaded_file($imgData,$path_file)){
-            $stmp = $db->prepare("UPDATE book SET title=?,image=?,book_url=?,category_id=? WHERE id=?");
-            $stmp->bind_param("sssii",$title,$img,$url,$type,$id);
-            $stmp->execute();
-            $stmp->close();
-            header("location: ../post.php");
-        }
-        // if ($img == "") {
-        //     // No file was selected for upload, your (re)action goes here
-        //     $stmp = $db->prepare("UPDATE book SET title=?,book_url=?,category_id=? WHERE id=?");
-        //     $stmp->bind_param("ssii",$title,$url,$type,$id);
-        //     $stmp->execute();
-        //     $stmp->close();
-        // } else {
-        //     $stmp = $db->prepare("UPDATE book SET title=?,image=?,book_url=?,category_id=? WHERE id=?");
-        //     $stmp->bind_param("sssii",$title,$imgData,$url,$type,$id);
-        //     $stmp->execute();
-        //     $stmp->close();
-        // }
+            try {
+                $stmp = $db->prepare("UPDATE book SET title=?,image=?,book_url=?,category_id=? WHERE id=?");
+                $stmp->execute([$title,$img,$url,$type,$id]);
+                header("location: ../post.php");
+            } catch (Exception $e) {
+               echo $e->getMessage();
+            }
            
-        
+        }
     }
 ?>

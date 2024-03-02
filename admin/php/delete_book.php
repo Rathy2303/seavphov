@@ -6,7 +6,12 @@
         $path = '../../images/book/'. $image;
         if(unlink($path)){
             // Update To Database
-            mysqli_query($db, "DELETE FROM book WHERE id=$id");
+            try {
+                $delete = $db->prepare("DELETE FROM book WHERE id=?");
+                $delete->execute([$id]);
+            } catch (Exception $e) {
+               echo $e->getMessage();
+            }
             echo "Delete Successfull";
         }
         

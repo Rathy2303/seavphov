@@ -72,9 +72,9 @@ $admin = getAdminInfo($db, $_SESSION['email']);
   <!-- Content -->
   <div class="container mt-5">
     <!-- Table -->
-    <section class="table-container">
+    <section class="table-container items-center flex-column align-items-center">
       <table class="table table-bordered w-50">
-        <thead>
+        <thead class="table-dark">
           <tr>
             <th scope="col">TITLE</th>
             <th scope="col">TYPE</th>
@@ -83,15 +83,27 @@ $admin = getAdminInfo($db, $_SESSION['email']);
         </thead>
         <tbody>
           <?php
-          $fetchdata = mysqli_query($db, "SELECT book.title,book.book_url,book.id,book.category_id,category.name FROM book INNER JOIN category on book.category_id=category.id ORDER BY id DESC");
-          while ($row = mysqli_fetch_assoc($fetchdata)) {
+          if(isset($_GET['page'])){
+            $page=$_GET['page'];
+          }else{
+            $page = 1;
+          }
+          $getpage = $db->prepare("SELECT id FROM book");
+          $getpage->execute();
+          $number_per_page = 8;
+          $totalpage =  ceil($getpage->rowCount()) / $number_per_page;
+          $startpage = ($page-1) * $number_per_page;
+          $fetchdata = $db->prepare("SELECT book.title,book.book_url,book.id,book.category_id,category.name FROM book INNER JOIN category on book.category_id=category.id ORDER BY id DESC LIMIT $startpage,$number_per_page");
+          $fetchdata->execute();
+          $rows = $fetchdata->fetchAll(PDO::FETCH_CLASS);
+          foreach($rows as $row) {
           ?>
             <tr>
-              <th scope="row"><?= $row['title']; ?></th>
-              <td><?= $row['name'] ?></td>
+              <th scope="row"><?= $row->title; ?></th>
+              <td><?= $row->name?></td>
               <td class="d-flex">
-                <button type="button" data-id="<?= $row['id'] ?>" class="btn btn-danger mr-1 js-btn-delete" data-id="<?= $row['id']; ?>" data-toggle="modal" data-target="#deleteModal">Delete</button>
-                <button type="button" data-id="<?= $row['id'] ?>" data-title="<?= $row['title'] ?>" data-url="<?= $row['book_url'] ?>" data-type-id="<?= $row['category_id']; ?>" data-type="<?= $row['name'] ?>" class="btn btn-primary js-btn-edit" data-toggle="modal" data-target="#editModal">Edit</button>
+                <button type="button" data-id="<?= $row->id?>" class="btn btn-danger mr-1 js-btn-delete" data-id="<?= $row->id?>" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                <button type="button" data-id="<?= $row->id?>" data-title="<?= $row->title?>" data-url="<?= $row->book_url?>" data-type-id="<?= $row->category_id?>" data-type="<?=$row->name?>" class="btn btn-primary js-btn-edit" data-toggle="modal" data-target="#editModal">Edit</button>
               </td>
             </tr>
           <?php
@@ -99,6 +111,29 @@ $admin = getAdminInfo($db, $_SESSION['email']);
           ?>
         </tbody>
       </table>
+      <div>
+        <?php
+          if($page==1){
+            echo ' <a class="btn btn-dark px-3 mx-1" href="" style="pointer-events: none;cursor: default;opacity: 0.8"><i class="fa-solid fa-angles-left"></i></a>';
+          }else if($page>1){
+            $previous = $page -1;
+            echo ' <a class="btn btn-dark px-3 mx-1" href="post.php?page='.$previous.'"><i class="fa-solid fa-angles-left"></i></a>';
+          }
+          for($i=1;$i<=$totalpage;$i++){
+            if($page==$i){
+              echo ' <a class="btn btn-primary px-3 mx-1" href="post.php?page='.$i.'">'.$i.'</a>';
+            }else{
+              echo ' <a class="btn btn-dark px-3 mx-1" href="post.php?page='.$i.'">'.$i.'</a>';
+            }
+          }
+          if($page==$totalpage){
+            echo ' <a class="btn btn-dark px-3 mx-1" href="" style="pointer-events: none;cursor: default;opacity: 0.8"><i class="fa-solid fa-angles-right"></i></a>';
+          }else if($page<$totalpage){
+            $next = $page+1;
+            echo '<a class="btn btn-dark px-3 mx-1" href="post.php?page='.$next.'"><i class="fa-solid fa-angles-right"></i></a';
+          }
+        ?>
+      </div>
     </section>
     <!-- End Table -->
 
@@ -137,12 +172,19 @@ $admin = getAdminInfo($db, $_SESSION['email']);
                   <option id="book_type" value=""><?= $cate['name'] ?></option>
                   <!-- Fetch Category -->
                   <?php
-                  $category = mysqli_query($db, "SELECT * FROM category");
-                  while ($cate = mysqli_fetch_assoc($category)) {
-                  ?>
-                    <option value="<?= $cate['id'] ?>"><?= $cate['name'] ?></option>
-                  <?php
+                  try {
+                    $category = $db->prepare("SELECT * FROM category");
+                    $category->execute();
+                    $row = $category->fetchAll(PDO::FETCH_CLASS);
+                    foreach($rowas as $cate){
+                    ?>
+                      <option value="<?= $cate->id?>"><?= $cate->name?></option>
+                    <?php
+                    }
+                  } catch (Exception $e) {
+                    //throw $th;
                   }
+           
                   ?>
                   <!-- End Fetch Category -->
                 </select>
@@ -196,12 +238,19 @@ $admin = getAdminInfo($db, $_SESSION['email']);
                 <select class="form-control" id="book_type_selected" name="book_type_selected">
                   <!-- Fetch Category -->
                   <?php
-                  $category = mysqli_query($db, "SELECT * FROM category");
-                  while ($cate = mysqli_fetch_assoc($category)) {
-                  ?>
-                    <option value="<?= $cate['id'] ?>"><?= $cate['name'] ?></option>
-                  <?php
+                  try {
+                    $category = $db->prepare("SELECT * FROM category");
+                    $category->execute();
+                    $row = $category->fetchAll(PDO::FETCH_CLASS);
+                    foreach($row as $cate){
+                    ?>
+                      <option value="<?= $cate->id?>"><?= $cate->name?></option>
+                    <?php
+                    }
+                  } catch (Exception $e) {
+                    echo $e->getMessage();
                   }
+           
                   ?>
                   <!-- End Fetch Category -->
                 </select>
