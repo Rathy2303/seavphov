@@ -4,6 +4,9 @@
   if(isset($_SESSION['isUserLoggedIn'])){
     header('Location:index.php');
   }
+  $status = "";
+  $litheader = "";
+  $title = "Login";
   if(isset($_POST['login'])){
     $email= $_POST['email'];
     $pass = $_POST['password'];
@@ -19,7 +22,8 @@
       $_SESSION['username']=$result['name'];
       header('Location:index.php');
     }else{
-     echo "<script>alert('Incorrect email or password');</script>";
+      $status = "denied";
+      $title = "Access Denied";
     }
   }
 ?>
@@ -30,36 +34,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../kh.png" />
     <title>Login To Admin Panel</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-</head>
-
+    <link rel="stylesheet" href="css/login.css">
+  </head>
 <body>
-    <div class="wrapper">
-    <!-- Logo -->
-    <br><br>
-    <center>
-      <img src="../images/khmer_logo_black.png" alt="" height="100">
-  </center>
-    <!-- End Logo -->
-        <div class="content">
-            <form method="post">
-                <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">Email address</label>
-                  <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                </div>
-                <div class="mb-3">
-                  <label for="exampleInputPassword1" class="form-label">Password</label>
-                  <input type="password" name="password" class="form-control" id="exampleInputPassword1">
-                </div>
-                <br>
-                <div class="text-center">
-                    <button type="submit" name="login" id="login" class="btn btn-primary w-100">Login</button>
-                </div>
-              </form>
+  <div class="background-wrap">
+    <div class="background"></div>
+  </div>
+  <form id="accesspanel" method="post">
+    <h1 id="litheader">SEAV PHOV</h1>
+    <div class="inset">
+      <p>
+        <input type="text" name="email" id="email" placeholder="Email address">
+      </p>
+      <p>
+        <input type="password" name="password" id="password" placeholder="Password">
+      </p>
+      <div style="text-align: center;">
+        <div class="checkboxouter">
+          <input type="checkbox" name="rememberme" id="remember" value="Remember">
+          <label class="checkbox"></label>
         </div>
+        <label for="remember">Show Password</label>
+      </div>
+      <input class="loginLoginValue" type="hidden" name="service" value="login" />
     </div>
+    <p class="p-container">
+      <input type="submit" class="<?=$status?>" name="login" id="go" value="<?=$title?>">
+    </p>
+  </form>
+
+  <!-- Java Script -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      e.preventDefault();
+      $("#remember").on('click',function(){
+        let input = document.getElementById("password");
+        $(this)[0].checked ? input.type = "text" : input.type = "password";
+      });
+    });
+  </script>
 </body>
 </html>
 
