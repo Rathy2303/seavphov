@@ -1,12 +1,10 @@
-<?php
-require ('db.php');
-$post_id = $_GET['id'];
-mysqli_query($db, "UPDATE book SET download=download+1 WHERE id=$post_id");
-
-$postQuery = "SELECT * FROM book WHERE id=$post_id";
-$runPQ = mysqli_query($db, $postQuery);
-$post = mysqli_fetch_assoc($runPQ);
-$url=$post['book_url'];
-header("Location: $url")
-
+<?php
+require ('db.php');
+$post_id = $_GET['id'];
+$stmp = $db->prepare("UPDATE book SET download=download+1 WHERE id=?");
+$stmp->execute([$post_id]);
+$postQuery = $db->prepare("SELECT book_url FROM book WHERE id=?");
+$postQuery->execute([$post_id]);
+$result = $postQuery->fetch(PDO::FETCH_BOTH);
+header("Location: $result[0]");
 ?>
